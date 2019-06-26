@@ -45,7 +45,7 @@ type Config struct {
 	Storage          storage.Storage
 	MessageChan      chan *data.Message
 	Assets           func(asset string) ([]byte, error)
-	Monkey           nil
+	Monkey           monkey.ChaosMonkey
 	OutgoingSMTPFile string
 	OutgoingSMTP     map[string]*OutgoingSMTP
 	WebPath          string
@@ -64,6 +64,9 @@ type OutgoingSMTP struct {
 }
 
 var cfg = DefaultConfig()
+
+// Jim is a monkey
+var Jim = &monkey.Jim{}
 
 // Configure configures stuff
 func Configure() *Config {
@@ -87,6 +90,13 @@ func Configure() *Config {
 		cfg.Storage = s
 	default:
 		log.Fatalf("Invalid storage type %s", cfg.StorageType)
+	}
+
+	Jim.Configure(func(message string, args ...interface{}) {
+		log.Printf(message, args...)
+	})
+	if cfg.InviteJim {
+		cfg.Monkey = Jim
 	}
 
 	if len(cfg.OutgoingSMTPFile) > 0 {
