@@ -45,7 +45,7 @@ type Config struct {
 	Storage          storage.Storage
 	MessageChan      chan *data.Message
 	Assets           func(asset string) ([]byte, error)
-	Monkey           nil
+	Monkey           monkey.ChaosMonkey
 	OutgoingSMTPFile string
 	OutgoingSMTP     map[string]*OutgoingSMTP
 	WebPath          string
